@@ -67,9 +67,11 @@ func Getjwt(useraccount string, token string) (bool,error) {
 	if err != nil {
 		return false, err
 	}
+	if result == nil {
+		return false,nil
+	}
 	byteresult := result.([]byte)
 	strresult := string(byteresult)
-	fmt.Println(strresult)
 	if strresult == token {
 		return true, nil
 	} else {
