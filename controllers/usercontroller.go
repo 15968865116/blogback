@@ -14,9 +14,16 @@ type Usercontroller struct {
 
 }
 
+//实现查询所需的结构
+type Usermessagestruct struct {
+	Account string `json:"account"`
+	Token string `json:"token"`
+}
+
 func (uc *Usercontroller) Router(engine *gin.Engine)  {
 	engine.POST("/user/Insertuser", uc.Insertuser)
 	engine.POST("/user/Login", uc.Selectuser)
+	engine.POST("/user/getinfo", uc.Usermessage)
 }
 
 //创建新用户
@@ -88,3 +95,31 @@ func  (uc *Usercontroller)Selectuser(context *gin.Context)  {
 // 删除用户
 
 // 更新用户资料
+
+// 查询用户资料
+func (uc *Usercontroller)Usermessage(context *gin.Context) {
+	var usermessage Usermessagestruct
+	err := context.BindJSON(&usermessage)
+	if err != nil {
+		log.Err(err)
+	}
+	// 判断token情况
+	tokenture, err := tool.Getjwt(usermessage.Account,usermessage.Token)
+	if err != nil {
+		return
+	}
+	if tokenture != true {
+		context.JSON(250,map[string]interface{}{
+			"code": 0,
+			"msg":"token错误或者登录过期",
+		})
+	} else{
+		userdao := dao.Userdao{tool.DBengine}
+		usertwo := userdao.SelectuserMessage(usermessage.Account)
+		context.JSON(200,map[string]interface{}{
+			"code": 1,
+			"msg":"获取成功",
+			"name":usertwo.Name,
+		})
+	}
+}

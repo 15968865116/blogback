@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -33,7 +34,8 @@ func (pc Picturecontroller)Getpictureforblog(context *gin.Context)  {
 	var img string
 
 	// 接收图片对象
-	var now = string(time.Now().Unix())
+	var nowint = time.Now().Unix()
+	var now =  strconv.FormatInt(nowint,10)
 	var picture Picture
 	err := context.BindJSON(&picture)
 	if err!= nil {
@@ -52,7 +54,7 @@ func (pc Picturecontroller)Getpictureforblog(context *gin.Context)  {
 	} else {
 
 		//为图片创造路径
-		fmt.Println(picture.IMG)
+		fmt.Println(now)
 		if picture.IMG[11] == 'j' {
 			path = "./picturefile/blogpic/" + picture.Puberaccount+now + ".jpg"
 			path_forweb =picture.Puberaccount+ now + ".jpg"
