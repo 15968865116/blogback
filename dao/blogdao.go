@@ -41,6 +41,16 @@ func (bd Blogdao)SelectBlog(name string) []model.Blog {
 	return blogs
 }
 
+// 查询单条博文
+func (bd Blogdao)SelectSingleBlog(id int) model.Blog {
+	var blog = model.Blog{}
+	_, err := bd.SQL("select * from blog where i_d = ?",id).Get(&blog)
+	if err != nil {
+		log.Error().Err(err)
+	}
+	return blog
+}
+
 // 删除博文
 func (bd Blogdao)DeleteBlog(id int) (bool) {
 	var blog =new(model.Blog)

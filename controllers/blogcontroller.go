@@ -6,6 +6,7 @@ import (
 	"finalgo/tool"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
+	"strconv"
 	"time"
 )
 
@@ -28,6 +29,7 @@ func (bc Blogcontroller)Router(engine *gin.Engine)  {
 	engine.POST("/blog/updateblog", bc.Updateblog)
 	engine.POST("/blog/deleteblog",bc.Deleteblog)
 	engine.GET("/blog/getblog",bc.Selectblog)
+	engine.GET("/blog/getspecificblog",bc.Selectoneblog)
 }
 
 // 新增 blog
@@ -122,6 +124,21 @@ func (bc Blogcontroller)Selectblog(context *gin.Context) {
 	name := context.Query("name")
 	bd := dao.Blogdao{tool.DBengine}
 	result := bd.SelectBlog(name)
+	context.JSON(200,map[string]interface{}{
+		"code":1,
+		"msg":"查询成功",
+		"result":result,
+	})
+}
+// 得到某一篇文章  修改前准备
+func (bc Blogcontroller)Selectoneblog(context *gin.Context) {
+	id := context.Query("id")
+	bd := dao.Blogdao{tool.DBengine}
+	intid, err := strconv.Atoi(id)
+	if err != nil {
+		log.Err(err)
+	}
+	result := bd.SelectSingleBlog(intid)
 	context.JSON(200,map[string]interface{}{
 		"code":1,
 		"msg":"查询成功",
