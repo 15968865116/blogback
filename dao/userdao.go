@@ -39,3 +39,13 @@ func (ud *Userdao)SelectuserMessage(account string) *model.User{
 	}
 	return nil
 }
+
+// 通过昵称查询信息
+func (ud *Userdao)SelectuserMessageGet(name string) *model.User{
+	var user model.User
+	b, _ := ud.Where("name = ?",name).Get(&user)
+	if b{
+		return &user
+	}
+	return nil
+}

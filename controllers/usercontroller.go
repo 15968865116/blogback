@@ -24,6 +24,7 @@ func (uc *Usercontroller) Router(engine *gin.Engine)  {
 	engine.POST("/user/Insertuser", uc.Insertuser)
 	engine.POST("/user/Login", uc.Selectuser)
 	engine.POST("/user/getinfo", uc.Usermessage)
+	engine.GET("/user/getinfosingle", uc.GetUsermessage)
 }
 
 //创建新用户
@@ -122,4 +123,25 @@ func (uc *Usercontroller)Usermessage(context *gin.Context) {
 			"name":usertwo.Name,
 		})
 	}
+}
+
+// 查询用户资料非登陆版
+func (uc *Usercontroller) GetUsermessage(context *gin.Context) {
+	name := context.Query("name")
+	udb := dao.Userdao{tool.DBengine}
+	user := udb.SelectuserMessageGet(name)
+	if user != nil {
+		context.JSON(200,map[string]interface{}{
+			"code":1,
+			"msg":"success",
+			"name":user.Name,
+			// other information
+		})
+	} else {
+		context.JSON(200,map[string]interface{}{
+			"code":0,
+			"msg":"failed",
+		})
+	}
+
 }
