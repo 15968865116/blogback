@@ -6,4 +6,8 @@ type User struct {
 	Account string `xorm:"unique notnull" json:"account"`
 	Name string `xorm:"notnull" json:"name"`
 	Password string `xorm:"notnull" json:"password"`
+	Portrait string `xorm:"" json:"portrait"`
+	Email string `xorm:"" json:"email"`
+	Tag string `xorm:"" json:"tag"`
+	Introduce string `xorm:"" json:"introduce"`
 }

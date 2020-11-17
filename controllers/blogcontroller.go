@@ -4,6 +4,7 @@ import (
 	"finalgo/dao"
 	"finalgo/model"
 	"finalgo/tool"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
 	"strconv"
@@ -13,6 +14,15 @@ import (
 // post传递过来的参数结构
 type Blogpost struct {
 	Puber string `json:"puber"`
+	Puberaccount string `json:"puberaccount"`
+	Title string `json:"title"`
+	Content string `json:"content"`
+	Token string `json:"token"`
+	Id int `json:"id"`
+}
+
+// update
+type Blogupdate struct {
 	Puberaccount string `json:"puberaccount"`
 	Title string `json:"title"`
 	Content string `json:"content"`
@@ -79,12 +89,12 @@ func (bc Blogcontroller)Createnewblog(context *gin.Context){
 // update blog
 func (bc Blogcontroller)Updateblog(context *gin.Context)  {
 	// 获得结构体
-	var blogpost Blogpost
+	var blogpost Blogupdate
 	err := context.BindJSON(&blogpost)
 	if err != nil {
 		log.Error().Err(err)
 	}
-
+	fmt.Println(blogpost)
 	// 判断token情况
 	tokenture, err := tool.Getjwt(blogpost.Puberaccount,blogpost.Token)
 	if err != nil {
@@ -99,10 +109,9 @@ func (bc Blogcontroller)Updateblog(context *gin.Context)  {
 		// 执行插入数据库
 		bd := dao.Blogdao{tool.DBengine}
 		var blogmodel model.Blog
-		blogmodel.Puberaccount = blogpost.Puberaccount
-		blogmodel.Puber = blogpost.Puber
 		blogmodel.Content = blogpost.Content
 		blogmodel.Title = blogpost.Title
+		blogmodel.ID = int64(blogpost.Id)
 		blogmodel.Updatedate = time.Now()
 		result := bd.UpdateBlog(blogpost.Id,blogmodel)
 		if result > 0 {

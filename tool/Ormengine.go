@@ -29,6 +29,7 @@ func OrmEngine(_config *Config) (*Orm, error){
 	err = engine.Sync2(new(model.User))
 	// 新建一个Blog表
 	err = engine.Sync2(new(model.Blog))
+	err = engine.Sync2(new(model.Comment))
 	orm := new(Orm)
 	orm.Engine = engine
 	DBengine = orm

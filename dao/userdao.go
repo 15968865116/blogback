@@ -49,3 +49,12 @@ func (ud *Userdao)SelectuserMessageGet(name string) *model.User{
 	}
 	return nil
 }
+
+// 更新用户信息
+func (ud *Userdao)Updateusermessage(acc string,user model.User) int64{
+	col,err := ud.Where("account = ?", acc).Update(&user)
+	if err != nil {
+		return 0
+	}
+	return col
+}

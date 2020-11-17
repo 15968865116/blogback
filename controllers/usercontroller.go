@@ -20,8 +20,19 @@ type Usermessagestruct struct {
 	Token string `json:"token"`
 }
 
+// 用户更新所需结构
+type Upateuserstruct struct {
+	Account string `json:"account"`
+	Token string `json:"token"`
+	Name string `json:"name"`
+	Email string `json:"email"`
+	Tag string `json:"tag"`
+	Introduce string `json:"introduce"`
+}
+
 func (uc *Usercontroller) Router(engine *gin.Engine)  {
 	engine.POST("/user/Insertuser", uc.Insertuser)
+	engine.POST("/user/Updateuser", uc.Updateuser)
 	engine.POST("/user/Login", uc.Selectuser)
 	engine.POST("/user/getinfo", uc.Usermessage)
 	engine.GET("/user/getinfosingle", uc.GetUsermessage)
@@ -96,6 +107,33 @@ func  (uc *Usercontroller)Selectuser(context *gin.Context)  {
 // 删除用户
 
 // 更新用户资料
+func (uc *Usercontroller) Updateuser(context *gin.Context) {
+	var uduser Upateuserstruct
+	err := context.BindJSON(&uduser)
+	if err != nil {
+		log.Err(err)
+	}
+	var user = model.User{
+		Name:uduser.Name,
+		Email:uduser.Email,
+		Tag :uduser.Tag,
+		Introduce: uduser.Introduce,
+	}
+	var ud = dao.Userdao{tool.DBengine}
+	result := ud.Updateusermessage(uduser.Account,user)
+	if result == 0 {
+		context.JSON(250,map[string]interface{}{
+			"code":0,
+			"msg":"update failed",
+		})
+	} else {
+		context.JSON(200, map[string]interface{}{
+			"code":1,
+			"msg":"success",
+		})
+	}
+
+}
 
 // 查询用户资料
 func (uc *Usercontroller)Usermessage(context *gin.Context) {
@@ -117,10 +155,17 @@ func (uc *Usercontroller)Usermessage(context *gin.Context) {
 	} else{
 		userdao := dao.Userdao{tool.DBengine}
 		usertwo := userdao.SelectuserMessage(usermessage.Account)
+
 		context.JSON(200,map[string]interface{}{
 			"code": 1,
 			"msg":"获取成功",
-			"name":usertwo.Name,
+			"umsg": map[string]interface{}{
+				"name": usertwo.Name,
+				"email": usertwo.Email,
+				"tag":usertwo.Tag,
+				"intro":usertwo.Introduce,
+				"portrait":usertwo.Portrait,
+			},
 		})
 	}
 }
@@ -134,7 +179,13 @@ func (uc *Usercontroller) GetUsermessage(context *gin.Context) {
 		context.JSON(200,map[string]interface{}{
 			"code":1,
 			"msg":"success",
-			"name":user.Name,
+			"umsg": map[string]interface{}{
+				"name": user.Name,
+				"email": user.Email,
+				"tag":user.Tag,
+				"intro":user.Introduce,
+				"portrait":user.Portrait,
+			},
 			// other information
 		})
 	} else {

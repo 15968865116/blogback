@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"encoding/base64"
+	"finalgo/dao"
+	"finalgo/model"
 	"finalgo/tool"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -23,6 +25,7 @@ type Picturecontroller struct {
 
 func (pc Picturecontroller)Router(engine *gin.Engine)  {
 	engine.POST("/picture/blog",pc.Getpictureforblog)
+	engine.POST("/picture/portrait",pc.Getpictureforuser)
 }
 
 // 文章内添加图片
@@ -151,10 +154,21 @@ func (pc Picturecontroller)Getpictureforuser(context *gin.Context)  {
 			log.Err(err)
 		}
 		returnpath := "http://localhost:8090/portrait/" + path_forweb
-		context.JSON(200, map[string]interface{}{
-			"code":1,
-			"msg":     "成功",
-			"urlpath": returnpath,
-		})
+		var user = model.User{Portrait: returnpath}
+		udb := dao.Userdao{tool.DBengine}
+		h := udb.Updateusermessage(picture.Puberaccount, user)
+		if h == 0 {
+			context.JSON(150, map[string]interface{}{
+				"code": 0,
+				"msg": "失败",
+				"urlpath": "",
+			})
+		} else {
+			context.JSON(200, map[string]interface{}{
+				"code":1,
+				"msg":     "成功",
+				"urlpath": returnpath,
+			})
+		}
 	}
 }

@@ -36,4 +36,5 @@ func Router(route *gin.Engine)  {
 	new(controllers.Usercontroller).Router(route)
 	new(controllers.Blogcontroller).Router(route)
 	new(controllers.Picturecontroller).Router(route)
+	new(controllers.Commentcontroller).Router(route)
 }
