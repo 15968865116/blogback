@@ -14,6 +14,7 @@ type Blog struct {
 	Likecount int64  `xorm:"int default 0"`
 	Replycount int64 `xorm:"int default 0"`
 	Scancount int64 `xorm:"int default 0"`
+	CategoryID int64 `xorm:"int notnull"`
 }
 
 // 博文分类表

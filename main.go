@@ -10,7 +10,7 @@ import (
 
 
 func main()  {
-
+	
 	config, err := tool.ParseConfig("./config/config.json")
 	if err != nil {
 		panic(err.Error())
