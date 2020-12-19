@@ -1,6 +1,6 @@
 # blogback
 blog后端
-# 12.16新增
+## 12.16新增
 ## 新增category：
 * 新增文章时需要新增category字段（完成）
 * 新增category时需要判断category是否已存在，需要对category进行一个查询。（直接使用插入，若是失败则说明可能已存在）
@@ -13,7 +13,7 @@ blog后端
 * 前端添加相应功能
 
 
-#12.19修改
+## 12.19修改
 * 增加中间件：数据增删改 通过中间件验证 在header增加以下字段
   * puberaccount
   * token
