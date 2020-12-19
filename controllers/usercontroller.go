@@ -31,10 +31,10 @@ type Upateuserstruct struct {
 }
 
 func (uc *Usercontroller) Router(engine *gin.Engine)  {
-	engine.POST("/user/Insertuser", uc.Insertuser)
-	engine.POST("/user/Updateuser", uc.Updateuser)
+	// engine.POST("/user/Insertuser", uc.Insertuser)
+	engine.POST("/user/Updateuser", tool.Tokencheck, uc.Updateuser)
 	engine.POST("/user/Login", uc.Selectuser)
-	engine.POST("/user/getinfo", uc.Usermessage)
+	engine.POST("/user/getinfo", tool.Tokencheck, uc.Usermessage)
 	engine.GET("/user/getinfosingle", uc.GetUsermessage)
 }
 
@@ -142,32 +142,22 @@ func (uc *Usercontroller)Usermessage(context *gin.Context) {
 	if err != nil {
 		log.Err(err)
 	}
-	// 判断token情况
-	tokenture, err := tool.Getjwt(usermessage.Account,usermessage.Token)
-	if err != nil {
-		return
-	}
-	if tokenture != true {
-		context.JSON(250,map[string]interface{}{
-			"code": 0,
-			"msg":"token错误或者登录过期",
-		})
-	} else{
-		userdao := dao.Userdao{tool.DBengine}
-		usertwo := userdao.SelectuserMessage(usermessage.Account)
 
-		context.JSON(200,map[string]interface{}{
-			"code": 1,
-			"msg":"获取成功",
-			"umsg": map[string]interface{}{
-				"name": usertwo.Name,
-				"email": usertwo.Email,
-				"tag":usertwo.Tag,
-				"intro":usertwo.Introduce,
-				"portrait":usertwo.Portrait,
-			},
-		})
-	}
+	userdao := dao.Userdao{tool.DBengine}
+	usertwo := userdao.SelectuserMessage(usermessage.Account)
+
+	context.JSON(200,map[string]interface{}{
+		"code": 1,
+		"msg":"获取成功",
+		"umsg": map[string]interface{}{
+			"name": usertwo.Name,
+			"email": usertwo.Email,
+			"tag":usertwo.Tag,
+			"intro":usertwo.Introduce,
+			"portrait":usertwo.Portrait,
+		},
+	})
+
 }
 
 // 查询用户资料非登陆版

@@ -20,8 +20,8 @@ type Blogpost struct {
 	Content      string `json:"content"`
 	Token        string `json:"token"`
 	Id           int    `json:"id"`
-	CategoryID   int64    `json:"categoryid"`
-	Ifcreatenewcategory bool `json:"ifcreatenewcategory"`
+	// CategoryID   int64    `json:"categoryid"`
+	// Ifcreatenewcategory bool `json:"ifcreatenewcategory"`
 	CategoryName string `json:"categoryName"`
 }
 
@@ -32,16 +32,16 @@ type Blogupdate struct {
 	Content      string `json:"content"`
 	Token        string `json:"token"`
 	Id           int    `json:"id"`
-	CategoryID   int64    `json:"categoryid"`
+	CategoryName   string    `json:"categoryname"`
 }
 
 type Blogcontroller struct {
 }
 
 func (bc Blogcontroller) Router(engine *gin.Engine) {
-	engine.POST("/blog/createblog", bc.Createnewblog)
-	engine.POST("/blog/updateblog", bc.Updateblog)
-	engine.POST("/blog/deleteblog", bc.Deleteblog)
+	engine.POST("/blog/createblog", tool.Tokencheck, bc.Createnewblog)
+	engine.POST("/blog/updateblog",  tool.Tokencheck, bc.Updateblog)
+	engine.POST("/blog/deleteblog",  tool.Tokencheck, bc.Deleteblog)
 	engine.GET("/blog/getblog", bc.Selectblog)
 	engine.GET("/blog/getspecificblog", bc.Selectoneblog)
 }
@@ -54,71 +54,54 @@ func (bc Blogcontroller) Createnewblog(context *gin.Context) {
 	if err != nil {
 		log.Error().Err(err)
 	}
+	fmt.Println(blogpost)
 
-	// 判断token情况
-	tokenture, err := tool.Getjwt(blogpost.Puberaccount, blogpost.Token)
-	if err != nil {
-		return
+
+	// 执行插入数据库
+	bd := dao.Blogdao{tool.DBengine}
+	var blogmodel model.Blog
+	blogmodel.Puberaccount = blogpost.Puberaccount
+	blogmodel.Puber = blogpost.Puber
+	blogmodel.Content = blogpost.Content
+	blogmodel.Pubdate = time.Now()
+	blogmodel.Title = blogpost.Title
+	blogmodel.Updatedate = time.Now()
+
+	// implement add new category
+
+	cd := dao.Categorydao{tool.DBengine}
+	ifexisted, ID := cd.SelectByName(blogpost.CategoryName)
+	if ifexisted {
+		blogmodel.CategoryID = ID
+	} else {
+		var categorymodel model.Category
+		categorymodel.Name = blogpost.CategoryName
+		resultcate := cd.CreateCategory(categorymodel)
+		if resultcate < 0 {
+			context.JSON(250, map[string]interface{}{
+				"code": 0,
+				"msg":  "添加失败",
+			})
+		} else {
+			_, categoryID := cd.SelectByName(blogpost.CategoryName)
+			blogmodel.CategoryID = categoryID
+		}
 	}
-	if tokenture != true {
-		context.JSON(250, map[string]interface{}{
-			"code": 0,
-			"msg":  "token错误或者登录过期",
+
+	result := bd.CreateBlog(blogmodel)
+	if result > 0 {
+		context.JSON(200, map[string]interface{}{
+			"code": 1,
+			"msg":  "添加成功",
 		})
 	} else {
-		// 执行插入数据库
-		bd := dao.Blogdao{tool.DBengine}
-		var blogmodel model.Blog
-		blogmodel.Puberaccount = blogpost.Puberaccount
-		blogmodel.Puber = blogpost.Puber
-		blogmodel.Content = blogpost.Content
-		blogmodel.Pubdate = time.Now()
-		blogmodel.Title = blogpost.Title
-		blogmodel.Updatedate = time.Now()
-
-		// implement add new category
-		if blogpost.Ifcreatenewcategory {
-			cd := dao.Categorydao{tool.DBengine}
-			var categorymodel model.Category
-			categorymodel.Name = blogpost.CategoryName
-			resultcate := cd.CreateCategory(categorymodel)
-			if resultcate < 0 {
-				context.JSON(250, map[string]interface{}{
-					"code": 0,
-					"msg":  "添加失败",
-				})
-			} else {
-				blogpost.CategoryID = resultcate
-				result := bd.CreateBlog(blogmodel)
-				if result > 0 {
-					context.JSON(200, map[string]interface{}{
-						"code": 1,
-						"msg":  "添加成功",
-					})
-				} else {
-					context.JSON(250, map[string]interface{}{
-						"code": 0,
-						"msg":  "添加失败",
-					})
-				}
-			}
-			
-		} else {
-			result := bd.CreateBlog(blogmodel)
-			if result > 0 {
-				context.JSON(200, map[string]interface{}{
-					"code": 1,
-					"msg":  "添加成功",
-				})
-			} else {
-				context.JSON(250, map[string]interface{}{
-					"code": 0,
-					"msg":  "添加失败",
-				})
-			}
-		}
-		
+		context.JSON(250, map[string]interface{}{
+			"code": 0,
+			"msg":  "添加失败",
+		})
 	}
+		
+
 }
 
 // update blog
@@ -129,39 +112,45 @@ func (bc Blogcontroller) Updateblog(context *gin.Context) {
 	if err != nil {
 		log.Error().Err(err)
 	}
-	fmt.Println(blogpost)
-	// 判断token情况
-	tokenture, err := tool.Getjwt(blogpost.Puberaccount, blogpost.Token)
-	if err != nil {
-		return
-	}
-	if tokenture != true {
-		context.JSON(250, map[string]interface{}{
-			"code": 0,
-			"msg":  "token错误或者登录过期",
-		})
+
+	// 执行插入数据库
+	bd := dao.Blogdao{tool.DBengine}
+	var blogmodel model.Blog
+	blogmodel.Content = blogpost.Content
+	blogmodel.Title = blogpost.Title
+	blogmodel.ID = int64(blogpost.Id)
+	blogmodel.Updatedate = time.Now()
+	cd := dao.Categorydao{tool.DBengine}
+	ifexisted, ID := cd.SelectByName(blogpost.CategoryName)
+	if ifexisted {
+		blogmodel.CategoryID = ID
 	} else {
-		// 执行插入数据库
-		bd := dao.Blogdao{tool.DBengine}
-		var blogmodel model.Blog
-		blogmodel.Content = blogpost.Content
-		blogmodel.Title = blogpost.Title
-		blogmodel.ID = int64(blogpost.Id)
-		blogmodel.Updatedate = time.Now()
-		blogmodel.CategoryID = blogpost.CategoryID
-		result := bd.UpdateBlog(blogpost.Id, blogmodel)
-		if result > 0 {
-			context.JSON(200, map[string]interface{}{
-				"code": 1,
-				"msg":  "修改成功",
-			})
-		} else {
+		var categorymodel model.Category
+		categorymodel.Name = blogpost.CategoryName
+		resultcate := cd.CreateCategory(categorymodel)
+		if resultcate < 0 {
 			context.JSON(250, map[string]interface{}{
 				"code": 0,
-				"msg":  "修改失败",
+				"msg":  "添加失败",
 			})
+		} else {
+			blogmodel.CategoryID = resultcate
 		}
 	}
+	// blogmodel.CategoryID = blogpost.CategoryID
+	result := bd.UpdateBlog(blogpost.Id, blogmodel)
+	if result > 0 {
+		context.JSON(200, map[string]interface{}{
+			"code": 1,
+			"msg":  "修改成功",
+		})
+	} else {
+		context.JSON(250, map[string]interface{}{
+			"code": 0,
+			"msg":  "修改失败",
+		})
+	}
+
 }
 
 // 得到所有的blog文章

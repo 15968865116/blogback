@@ -123,18 +123,19 @@ func (pc Picturecontroller)Getpictureforuser(context *gin.Context)  {
 	} else {
 
 		//为图片创造路径
-		fmt.Println(picture.IMG)
+		//fmt.Println(picture.IMG)
+		var timestring = strconv.FormatInt(time.Now().Unix(),10)
 		if picture.IMG[11] == 'j' {
-			path = "./picturefile/userpic/" + picture.Puberaccount + ".jpg"
-			path_forweb =picture.Puberaccount + ".jpg"
+			path = "./picturefile/userpic/" + picture.Puberaccount + timestring + ".jpg"
+			path_forweb =picture.Puberaccount + timestring  + ".jpg"
 			img = picture.IMG[23:]
 		} else if picture.IMG[11] == 'p' {
-			path = "./picturefile/userpic/" + picture.Puberaccount + ".png"
-			path_forweb = picture.Puberaccount + ".png"
+			path = "./picturefile/userpic/" + picture.Puberaccount + timestring + ".png"
+			path_forweb = picture.Puberaccount + timestring  + ".png"
 			img = picture.IMG[22:]
 		} else if picture.IMG[11] == 'g' {
-			path = "./picturefile/userpic/" + picture.Puberaccount + ".gif"
-			path_forweb = picture.Puberaccount + ".gif"
+			path = "./picturefile/userpic/" + picture.Puberaccount + timestring + ".gif"
+			path_forweb = picture.Puberaccount + timestring  + ".gif"
 			img = picture.IMG[22:]
 		} else {
 			fmt.Println("buzhidhigaileix")

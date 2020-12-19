@@ -42,6 +42,19 @@ func (bd Blogdao) SelectBlog(name string) []model.Blog {
 	return blogs
 }
 
+// 删除相应种类的所有文章
+func (bd Blogdao) DeleteByCategory(categoryID int)(bool) {
+	var blog model.Blog
+	blog.CategoryID = categoryID
+	_, err := bd.Exec("delete from blog where category_i_d = ?", categoryID)
+
+	if err != nil {
+		return false
+	}
+
+	return true
+}
+
 // 查询单条博文
 func (bd Blogdao) SelectSingleBlog(id int) model.Blog {
 	var blog = model.Blog{}
