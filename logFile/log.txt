@@ -1,0 +1,5 @@
+{"level":"info","time":"2020-12-21T21:35:42+08:00","message":"222222"}
+{"level":"info","time":"2020-12-21T21:38:07+08:00","message":"222222"}
+{"level":"error","time":"2020-12-21T21:40:16+08:00","message":"aaaaa"}
+[90m2020-12-21 21:41:00.000[0m [1m[31mERR[0m[0m aaaaa
+{"level":"error","time":"2020-12-21T21:55:44+08:00","message":"您的程序出现错误，具体原因为:open as.txx: The system cannot find the file specified."}

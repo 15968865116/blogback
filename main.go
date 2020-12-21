@@ -30,6 +30,7 @@ func main()  {
 	app.Run(config.Apphost + ":" + config.Port)
 
 
+
 }
 
 func Router(route *gin.Engine)  {

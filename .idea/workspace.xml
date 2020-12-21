@@ -2,21 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c864de3e-435a-4452-bde0-437dc3359917" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/需求.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/blogcontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/blogcontroller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/categorycontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/categorycontroller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/picturecontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/picturecontroller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/usercontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/usercontroller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dao/blogdao.go" beforeDir="false" afterPath="$PROJECT_DIR$/dao/blogdao.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dao/categorydao.go" beforeDir="false" afterPath="$PROJECT_DIR$/dao/categorydao.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Blog.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/Blog.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Category.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/Category.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/Comment.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/Comment.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model/User.go" beforeDir="false" afterPath="$PROJECT_DIR$/model/User.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/picturefile/userpic/youneverknow.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/picturefile/userpic/youneverknow.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/数据库结构.md" beforeDir="false" afterPath="$PROJECT_DIR$/数据库结构.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,30 +89,34 @@
       <screen x="0" y="0" width="1920" height="1030" />
     </state>
     <state x="686" y="207" key="FileChooserDialogImpl/0.0.1920.1030@0.0.1920.1030" timestamp="1607604423256" />
-    <state width="1844" height="307" key="GridCell.Tab.0.bottom" timestamp="1608383278382">
+    <state width="1844" height="307" key="GridCell.Tab.0.bottom" timestamp="1608559024864">
       <screen x="0" y="0" width="1920" height="1030" />
     </state>
     <state width="1493" height="253" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1604671286739" />
-    <state width="1844" height="307" key="GridCell.Tab.0.bottom/0.0.1920.1030@0.0.1920.1030" timestamp="1608383278382" />
-    <state width="1844" height="307" key="GridCell.Tab.0.center" timestamp="1608383278382">
+    <state width="1844" height="307" key="GridCell.Tab.0.bottom/0.0.1920.1030@0.0.1920.1030" timestamp="1608559024864" />
+    <state width="1844" height="307" key="GridCell.Tab.0.center" timestamp="1608559024864">
       <screen x="0" y="0" width="1920" height="1030" />
     </state>
     <state width="1493" height="253" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1604671286739" />
-    <state width="1844" height="307" key="GridCell.Tab.0.center/0.0.1920.1030@0.0.1920.1030" timestamp="1608383278382" />
-    <state width="1844" height="307" key="GridCell.Tab.0.left" timestamp="1608383278382">
+    <state width="1844" height="307" key="GridCell.Tab.0.center/0.0.1920.1030@0.0.1920.1030" timestamp="1608559024864" />
+    <state width="1844" height="307" key="GridCell.Tab.0.left" timestamp="1608559024864">
       <screen x="0" y="0" width="1920" height="1030" />
     </state>
     <state width="1493" height="253" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1604671286739" />
-    <state width="1844" height="307" key="GridCell.Tab.0.left/0.0.1920.1030@0.0.1920.1030" timestamp="1608383278382" />
-    <state width="1844" height="307" key="GridCell.Tab.0.right" timestamp="1608383278382">
+    <state width="1844" height="307" key="GridCell.Tab.0.left/0.0.1920.1030@0.0.1920.1030" timestamp="1608559024864" />
+    <state width="1844" height="307" key="GridCell.Tab.0.right" timestamp="1608559024864">
       <screen x="0" y="0" width="1920" height="1030" />
     </state>
     <state width="1493" height="253" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1604671286739" />
-    <state width="1844" height="307" key="GridCell.Tab.0.right/0.0.1920.1030@0.0.1920.1030" timestamp="1608383278382" />
+    <state width="1844" height="307" key="GridCell.Tab.0.right/0.0.1920.1030@0.0.1920.1030" timestamp="1608559024864" />
     <state x="270" y="56" key="SettingsEditor" timestamp="1604649083579">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="270" y="56" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1604649083579" />
+    <state x="715" y="407" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1608554877855">
+      <screen x="0" y="0" width="1920" height="1030" />
+    </state>
+    <state x="715" y="407" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1920.1030@0.0.1920.1030" timestamp="1608554877855" />
     <state x="539" y="181" width="840" height="848" key="search.everywhere.popup" timestamp="1604841952749">
       <screen x="0" y="0" width="1920" height="1030" />
     </state>
