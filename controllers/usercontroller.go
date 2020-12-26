@@ -32,10 +32,10 @@ type Upateuserstruct struct {
 
 func (uc *Usercontroller) Router(engine *gin.Engine)  {
 	// engine.POST("/user/Insertuser", uc.Insertuser)
-	engine.POST("/user/Updateuser", tool.Tokencheck, uc.Updateuser)
+	engine.PUT("/user/Updateuser", tool.Tokencheck, uc.Updateuser)
 	engine.POST("/user/Login", uc.Selectuser)
-	engine.POST("/user/getinfo", tool.Tokencheck, uc.Usermessage)
-	engine.GET("/user/getinfosingle", uc.GetUsermessage)
+	engine.POST("/user/info", tool.Tokencheck, uc.Usermessage)
+	engine.GET("/user/infosingle", uc.GetUsermessage)
 }
 
 //创建新用户
@@ -70,6 +70,7 @@ func  (uc *Usercontroller)Selectuser(context *gin.Context)  {
 	userdao := dao.Userdao{tool.DBengine}
 	usertwo := userdao.Selectuser(user.Account,user.Password)
 	if usertwo == nil {
+		tool.LogERRAdmin("用户登录失败，用户不存在")
 		context.JSON(250,map[string]interface{}{
 			"code":0,
 			"msg":"登录失败",
@@ -87,12 +88,14 @@ func  (uc *Usercontroller)Selectuser(context *gin.Context)  {
 		}
 		token, err := tool.TokenintoRedis(claim)
 		if err != nil {
+			tool.LogERRAdmin("redis缓存失败！"+ err.Error())
 			context.JSON(200,map[string]interface{} {
 				"code":3,
 				"msg":"redis缓存失败",
 				"token":"None",
 			})
 		} else{
+			tool.LogINFOAdmin("用户登录成功！")
 			context.JSON(200,map[string]interface{} {
 				"code":1,
 				"username":usertwo.Name,
@@ -111,7 +114,7 @@ func (uc *Usercontroller) Updateuser(context *gin.Context) {
 	var uduser Upateuserstruct
 	err := context.BindJSON(&uduser)
 	if err != nil {
-		log.Err(err)
+		tool.LogERRAdmin("用户更新数据绑定失败，"+err.Error())
 	}
 	var user = model.User{
 		Name:uduser.Name,
@@ -122,11 +125,13 @@ func (uc *Usercontroller) Updateuser(context *gin.Context) {
 	var ud = dao.Userdao{tool.DBengine}
 	result := ud.Updateusermessage(uduser.Account,user)
 	if result == 0 {
+		tool.LogERRAdmin("用户资料更新失败！")
 		context.JSON(250,map[string]interface{}{
 			"code":0,
 			"msg":"update failed",
 		})
 	} else {
+		tool.LogINFOAdmin("用户资料更新成功！")
 		context.JSON(200, map[string]interface{}{
 			"code":1,
 			"msg":"success",

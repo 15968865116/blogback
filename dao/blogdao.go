@@ -80,3 +80,16 @@ func (bd Blogdao) DeleteBlog(id int) bool {
 	}
 
 }
+
+// 通过文章分类查询文章
+func (bd Blogdao) SelectBlogByCategory(categoryid int) []model.Blog{
+	var blogs = make([]model.Blog, 0)
+
+	err := bd.SQL("select * from blog where category_i_d = ?", categoryid).Find(&blogs)
+
+	if err != nil {
+		return nil
+	}
+
+	return blogs
+}

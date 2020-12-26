@@ -4,7 +4,6 @@ import (
 	"finalgo/dao"
 	"finalgo/model"
 	"finalgo/tool"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,15 +19,30 @@ type CategoryDelete struct {
 
 // Router is the router of the controller
 func (ca *Categorycontroller) Router(engine *gin.Engine) {
-	engine.GET("category/getallcategory", ca.Getallcategory)
-	engine.DELETE("category/deletecategory", tool.Tokencheck, ca.Deletecategory)
-	engine.PUT("category/updatecategory",tool.Tokencheck, ca.Updatecategory)
+	engine.GET("category/allcategoryAdimin", ca.GetallcategoryAdmin)
+	engine.GET("category/allcategoryVisitor", ca.GetallcategoryVisitor)
+	engine.DELETE("category/category", tool.Tokencheck, ca.Deletecategory)
+	engine.PUT("category/category",tool.Tokencheck, ca.Updatecategory)
 }
 
 // Getallcategory is Get all category
-func (ca *Categorycontroller) Getallcategory(context *gin.Context) {
+func (ca *Categorycontroller) GetallcategoryAdmin(context *gin.Context) {
 	cd := dao.Categorydao{tool.DBengine}
 	CategoryList := cd.Selectallcategory()
+	tool.LogINFOAdmin("获取所有分类信息成功！")
+	context.JSON(200, map[string]interface{}{
+		"code":     1,
+		"status":   "success",
+		"category": CategoryList,
+	})
+}
+
+
+// Getallcategory is Get all category
+func (ca *Categorycontroller) GetallcategoryVisitor(context *gin.Context) {
+	cd := dao.Categorydao{tool.DBengine}
+	CategoryList := cd.Selectallcategory()
+	tool.LogINFOVisitor("获取所有分类信息成功！")
 	context.JSON(200, map[string]interface{}{
 		"code":     1,
 		"status":   "success",
@@ -43,6 +57,7 @@ func (ca *Categorycontroller) Deletecategory(context *gin.Context) {
 	var modelcategorydelete CategoryDelete
 	err := context.BindJSON(&modelcategorydelete)
 	if err != nil {
+		tool.LogERRAdmin("绑定分类删除请求数据失败，" + err.Error())
 		context.JSON(300, map[string]interface{}{
 			"code":   0,
 			"delete": "failed",
@@ -59,13 +74,21 @@ func (ca *Categorycontroller) Deletecategory(context *gin.Context) {
 	if result {
 		if modelcategorydelete.IfdeleteArticle {
 			bd := dao.Blogdao{tool.DBengine}
-			bd.DeleteByCategory(modelcategory.ID)
+			true := bd.DeleteByCategory(modelcategory.ID)
+			if true {
+				tool.LogINFOAdmin("删除相应分类文章数据成功！")
+			} else {
+				tool.LogINFOAdmin("删除相应分类文章数据失败！")
+			}
+
 		}
+		tool.LogINFOAdmin("删除文章分类数据成功")
 		context.JSON(200, map[string]interface{}{
 			"code":   1,
 			"delete": "success",
 		})
 	} else {
+		tool.LogERRAdmin("删除文章分类数据失败！")
 		context.JSON(300, map[string]interface{}{
 			"code":   0,
 			"delete": "failed",
@@ -78,8 +101,8 @@ func (ca *Categorycontroller) Updatecategory(context *gin.Context) {
 	cd := dao.Categorydao{tool.DBengine}
 	var modelcategory model.Category
 	err := context.BindJSON(&modelcategory)
-	fmt.Println(modelcategory)
 	if err != nil {
+		tool.LogERRAdmin("绑定文章分类数据失败！")
 		context.JSON(300, map[string]interface{}{
 			"code":   0,
 			"update": "failed",
@@ -88,11 +111,13 @@ func (ca *Categorycontroller) Updatecategory(context *gin.Context) {
 	}
 	result := cd.Updatecategory(modelcategory)
 	if result {
+		tool.LogINFOAdmin("更新文章分类成功！")
 		context.JSON(200, map[string]interface{}{
 			"code":   1,
 			"update": "success",
 		})
 	} else {
+		tool.LogERRAdmin("更新文章分类失败！")
 		context.JSON(300, map[string]interface{}{
 			"code":   0,
 			"update": "failed",
