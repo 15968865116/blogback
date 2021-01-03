@@ -4,13 +4,6 @@
     <list default="true" id="c864de3e-435a-4452-bde0-437dc3359917" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/blogcontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/blogcontroller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/categorycontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/categorycontroller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/commentcontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/commentcontroller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/usercontroller.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/usercontroller.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dao/blogdao.go" beforeDir="false" afterPath="$PROJECT_DIR$/dao/blogdao.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dao/categorydao.go" beforeDir="false" afterPath="$PROJECT_DIR$/dao/categorydao.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dao/commentdao.go" beforeDir="false" afterPath="$PROJECT_DIR$/dao/commentdao.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

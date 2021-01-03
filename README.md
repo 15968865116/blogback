@@ -39,5 +39,27 @@ blog后端
 * 修复了删除文章未删除评论的bug
 * 修复了修改文章时改变了分类无法映射到文章的bug
 
+# cofig格式
+{
+  "Apphost": "127.0.0.1",
+  "Appport": "8090",
+  "database": {
+    "Type" :"mysql",
+    "User" : "xx",
+    "Password" : "xxx",
+    "Host" : "xxx",
+    "Port": "xxx",
+    "DBName" :  "xxx",
+    "Charset": "xxx",
+    "Showsql": true
+  },
+  "redis": {
+    "Address": "xxxx",
+    "Port": "xxx",
+    "Password": "xxxx",
+    "Poolsize": 100
+  }
+}
+
 
  
