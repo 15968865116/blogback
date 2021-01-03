@@ -41,9 +41,11 @@ func (bc Blogcontroller) Router(engine *gin.Engine) {
 	engine.POST("/blog/createblog", tool.Tokencheck, bc.Createnewblog)
 	engine.POST("/blog/updateblog",  tool.Tokencheck, bc.Updateblog)
 	engine.POST("/blog/deleteblog",  tool.Tokencheck, bc.Deleteblog)
-	engine.GET("/blog/getblog", bc.Selectblog)
-	engine.GET("/blog/getspecificblog", bc.Selectoneblog)
+	engine.GET("/blog/blog", bc.Selectblog)
+	engine.GET("/blog/blogbypage", bc.SelectblogBypage)
+	engine.GET("/blog/specificblog", bc.Selectoneblog)
 	engine.GET("/blog/blogbycategory", bc.SelectblogByCategory)
+	engine.GET("/blog/blogbycategorybypage", bc.SelectblogByCategoryAndPage)
 }
 
 // 新增 blog 
@@ -65,6 +67,13 @@ func (bc Blogcontroller) Createnewblog(context *gin.Context) {
 	blogmodel.Pubdate = time.Now()
 	blogmodel.Title = blogpost.Title
 	blogmodel.Updatedate = time.Now()
+	if blogmodel.Title == "" {
+		context.JSON(250, map[string]interface{}{
+			"code": 0,
+			"msg":  "添加失败",
+		})
+		return
+	}
 
 	// implement add new category
 	cd := dao.Categorydao{tool.DBengine}
@@ -188,12 +197,46 @@ func (bc Blogcontroller) Selectblog(context *gin.Context) {
 	name := context.Query("name")
 	bd := dao.Blogdao{tool.DBengine}
 	result := bd.SelectBlog(name)
+	for i := 0; i < len(result); i++ {
+		result[i].Content = ""
+	}
 	tool.LogINFOAdmin("查询成功！")
 	context.JSON(200, map[string]interface{}{
 		"code":   1,
 		"msg":    "查询成功",
 		"result": result,
 	})
+}
+
+// 根据分页来查询文章
+func (bc Blogcontroller) SelectblogBypage(context *gin.Context) {
+	name := context.Query("name")
+	page := context.Query("page")
+	pageint, err := strconv.Atoi(page)
+	if err != nil {
+		context.JSON(200, map[string]interface{}{
+			"code":   0,
+			"msg":    "查询失败，分页信息有误。",
+			"result": "",
+		})
+	} else {
+		bd := dao.Blogdao{tool.DBengine}
+		result := bd.SelectBlog(name)
+		var end int
+		if pageint*5 > len(result) {
+			end = len(result)
+		} else {
+			end = pageint*5
+		}
+		tool.LogINFOAdmin("查询成功！")
+		context.JSON(200, map[string]interface{}{
+			"code":   1,
+			"msg":    "查询成功",
+			"result": result[(pageint-1)*5:end],
+			"allpage": len(result),
+		})
+	}
+
 }
 
 // 得到某一篇文章  修改前准备
@@ -229,6 +272,8 @@ func (bc Blogcontroller) Deleteblog(context *gin.Context) {
 	result := bd.DeleteBlog(blogpost.Id)
 	if result == true {
 		tool.LogINFOAdmin("删除文章成功！")
+		cd := dao.Commentdao{tool.DBengine}
+		cd.DeletecommentByblogid(int64(blogpost.Id))
 		context.JSON(200, map[string]interface{}{
 			"code": 1,
 			"msg":  "删除成功",
@@ -263,5 +308,37 @@ func (bc Blogcontroller) SelectblogByCategory(context *gin.Context) {
 		"code":1,
 		"msg":"获取成功",
 		"result": blogs,
+	})
+}
+
+// 通过文章分类和页数查询文章
+func (bc Blogcontroller) SelectblogByCategoryAndPage(context *gin.Context) {
+	var blogs []model.Blog
+	categoryid := context.Query("categoryid")
+	page := context.Query("page")
+	categoryidint, err := strconv.Atoi(categoryid)
+	pageint, err := strconv.Atoi(page)
+	if err != nil {
+		tool.LogERRVisitor("转换失败，"+ err.Error())
+		context.JSON(404, map[string]interface{}{
+			"code":0,
+			"msg":"获取失败",
+		})
+		return
+	}
+
+	bd := dao.Blogdao{tool.DBengine}
+	blogs = bd.SelectBlogByCategory(categoryidint)
+	var end int
+	if pageint*5 > len(blogs) {
+		end = len(blogs)
+	} else {
+		end = pageint*5
+	}
+	context.JSON(200, map[string]interface{}{
+		"code":1,
+		"msg":"获取成功",
+		"result": blogs[(pageint-1)*5:end],
+		"allpage": len(blogs),
 	})
 }

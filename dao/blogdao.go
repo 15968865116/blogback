@@ -24,7 +24,7 @@ func (bd Blogdao) CreateBlog(blog model.Blog) int64 {
 
 //更新博文
 func (bd Blogdao) UpdateBlog(id int, blog model.Blog) int64 {
-	affected, err := bd.Id(id).Cols("content", "updatedate", "title", "categoryid").Update(&blog)
+	affected, err := bd.Id(id).Cols("content", "updatedate", "title", "category_i_d").Update(&blog)
 	if err != nil {
 		log.Error().Err(err)
 	}

@@ -17,7 +17,6 @@ type Usercontroller struct {
 //实现查询所需的结构
 type Usermessagestruct struct {
 	Account string `json:"account"`
-	Token string `json:"token"`
 }
 
 // 用户更新所需结构

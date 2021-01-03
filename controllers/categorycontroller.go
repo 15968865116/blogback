@@ -4,6 +4,7 @@ import (
 	"finalgo/dao"
 	"finalgo/model"
 	"finalgo/tool"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -74,11 +75,19 @@ func (ca *Categorycontroller) Deletecategory(context *gin.Context) {
 	if result {
 		if modelcategorydelete.IfdeleteArticle {
 			bd := dao.Blogdao{tool.DBengine}
+			blogs := bd.SelectBlogByCategory(modelcategory.ID)
 			true := bd.DeleteByCategory(modelcategory.ID)
 			if true {
 				tool.LogINFOAdmin("删除相应分类文章数据成功！")
 			} else {
 				tool.LogINFOAdmin("删除相应分类文章数据失败！")
+			}
+			cd := dao.Commentdao{tool.DBengine}
+			for _, blog := range blogs {
+				ok := cd.DeletecommentByblogid(blog.ID)
+				if !ok {
+					tool.LogERRAdmin(fmt.Sprintf("删除评论失败:%s",blog.ID))
+				}
 			}
 
 		}

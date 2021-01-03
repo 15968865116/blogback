@@ -15,7 +15,7 @@ type Commentcontroller struct {
 
 
 func (cc *Commentcontroller)Router(engine *gin.Engine)  {
-	engine.POST("/comment/comment",tool.Tokencheck,cc.CreateComment)
+	engine.POST("/comment/comment",cc.CreateComment)
 	engine.GET("/comment/commentchecked",cc.SelectcommentChecked)
 	engine.PUT("/comment/comment",tool.Tokencheck,cc.CheckComment)
 	engine.DELETE("/comment/comment",tool.Tokencheck,cc.Deletecomment)
@@ -109,7 +109,7 @@ func (cc *Commentcontroller)Deletecomment(context *gin.Context) {
 	var comment model.Comment
 	err := context.BindJSON(&comment)
 	if err != nil {
-		tool.LogERRAdmin("审核评论时，数据绑定失败"+ err.Error())
+		tool.LogERRAdmin("删除评论时，数据绑定失败"+ err.Error())
 		context.JSON(200, map[string]interface{}{
 			"code": 1,
 			"msg": "failed",

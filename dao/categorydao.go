@@ -16,12 +16,13 @@ type Categorydao struct {
 
 // CreateCategory use for creating new category
 func (cd *Categorydao) CreateCategory(Categorymodel model.Category) int{
-	count, err := cd.InsertOne(&Categorymodel)
+	_, err := cd.InsertOne(&Categorymodel)
 	if err != nil {
 		log.Error().Err(err)
 	}
-	// the return num count is the id of the insert one, if it more than 0, the meaning is insert success
-	return int(count)
+	_, categoryid := cd.SelectByName(Categorymodel.Name)
+	// the return num categoryid is the id of the insert one, if it more than 0, the meaning is insert success
+	return int(categoryid)
 }
 
 // Selectallcategory use for Selecting all the category of the blog

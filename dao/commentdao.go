@@ -26,7 +26,7 @@ func (cd *Commentdao)Insertcomment(comment model.Comment) bool {
 // 查询评论
 func (cd *Commentdao)Selectcomment(blogid int) []model.Comment{
 	var comments = make([]model.Comment,0)
-	ifcheck := 0
+	ifcheck := 1
 	err := cd.Where("blogid = ?", blogid).And("if_check = ?",ifcheck).Find(&comments)
 	if err != nil {
 		log.Err(err)
@@ -60,6 +60,16 @@ func (cd *Commentdao) Deletecomment(commentid int) bool {
 	_, err := cd.Exec("delete from comment where id = ?", commentid)
 	if err != nil {
 		tool.LogERRAdmin("评论数据审查更新失败。")
+		return false
+	}
+	return true
+}
+
+// 根据blogid删评论
+func (cd *Commentdao) DeletecommentByblogid(blogid int64) bool {
+	_, err := cd.Exec("delete from comment where blogid = ?", blogid)
+	if err != nil {
+		tool.LogERRAdmin("评论数据删除失败。")
 		return false
 	}
 	return true
